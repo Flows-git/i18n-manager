@@ -1,0 +1,24 @@
+@use 'vuetify' with (
+  $color-pack: false,
+  $typography: (
+    // add custom typograhy here
+    // available values: 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'subtitle-1', 'subtitle-2', 'body-1', 'body-2', 'button', 'caption', 'overline'
+    // example:
+    // 'h1': (
+    //   'size': 60px,
+    //   'weight': 500,
+    //   'line-height': 74px,
+    //   'letter-spacing': 1px,
+    //   'font-family': 'Roboto',
+    //   'text-transform': none,
+    // ),
+  )
+);
+
+// global custom css
+.text-white {
+  color: #fff;
+}
+.bg-white {
+  color: #fff;
+}
