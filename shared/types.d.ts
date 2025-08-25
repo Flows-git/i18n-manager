@@ -8,3 +8,10 @@ interface TreeViewEntry {
   key?: string
   children?: TreeViewEntry[]
 }
+
+interface I18nListEntry {
+  title: string
+  key: string
+  value?: Record<string, string>
+  isFolder?: boolean
+}

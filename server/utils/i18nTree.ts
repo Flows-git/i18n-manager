@@ -1,5 +1,32 @@
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import * as process from 'node:process'
 import merge from 'deepmerge'
 import { isObject } from './helper'
+import { getLocalesFromDataFolder } from './locales'
+
+export function getI18nTreeData() {
+  const dataFolder = path.join(process.cwd(), 'data')
+  const locales = getLocalesFromDataFolder()
+
+  let data: Array<TreeViewEntry> = []
+  locales.forEach((locale) => {
+    const filePath = path.join(dataFolder, `${locale}.json`)
+    if (fs.existsSync(filePath)) {
+      const fileContent = fs.readFileSync(filePath, 'utf-8')
+      try {
+        const jsonData = JSON.parse(fileContent)
+        const treeviewData = parseI18n(jsonData, locale)
+        data = mergeI18nTree(data, treeviewData)
+      }
+      catch (error) {
+        console.error(`Error parsing JSON from ${filePath}:`, error)
+      }
+    }
+  })
+
+  return data
+}
 
 /**
  * Merges two i18n trees with deepmerge.
