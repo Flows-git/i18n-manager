@@ -52,7 +52,7 @@ function isLocaleMissing(item: TreeViewEntry) {
       <template #append="{ item }">
         <template v-if="item.key">
           <span>{{ item.key }}</span>
-          <v-btn icon="mdi-content-copy" size="small" class="ml-2" @click.stop />
+          <v-btn icon="mdi-content-copy" size="small" class="ml-2" @click.stop="copyTextToClipboard(item.key)" />
         </template>
       </template>
     </v-treeview>
@@ -64,7 +64,7 @@ function isLocaleMissing(item: TreeViewEntry) {
         <div class="text-h6 pb-3 text-center" style="line-break: anywhere;">
           {{ selected[0].key }}
           <div>
-            <v-btn icon="mdi-content-copy" size="small" class="ml-2" @click.stop />
+            <v-btn icon="mdi-content-copy" size="small" class="ml-2" @click.stop="copyTextToClipboard(selected[0].key)" />
             <v-btn icon="mdi-trash-can-outline" size="small" class="ml-2" @click.stop />
           </div>
         </div>
