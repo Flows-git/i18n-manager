@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/test-utils'],
+
+  eslint: {
+    config: {
+      standalone: false
+    }
+  },
+
   build: {
     transpile: ['vuetify'],
   },
