@@ -1,0 +1,11 @@
+name: i18n-ui
+
+services:
+  i18n-ui:
+    build: .
+    ports:
+      - "3000:3000"
+    # environment:
+    #   - HOST=
+    volumes:
+      - ./test-data:/app/data
