@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const selected = ref()
+const selected = shallowRef()
 
-const { data } = useFetch<{ data: Array<TreeViewEntry>, locales: string[] }>('/api/i18n', { lazy: true, server: false })
+const { data, pending } = useFetch<{ data: Array<TreeViewEntry>, locales: string[] }>('/api/i18n', { lazy: true, server: false })
 // const data = ref<{ data: Array<TreeViewEntry>, locales: string[] }>()
 const locales = computed(() => data.value?.locales || [])
 const items = computed(() => data.value?.data || [])
@@ -28,8 +28,9 @@ function isLocaleMissing(item: TreeViewEntry) {
     <v-text-field label="Übersetzung suchen" hide-details color="primary" />
     <v-checkbox label="Nur Fehlende Übersetzungen anzeigen" hide-details density="compact" color="primary" />
     <v-treeview
-      v-model="selected" :hide-actions="false" :indent-lines="true" :items="items" :separate-roots="true" density="compact" item-value="id" open-all
-      open-on-click return-object
+      v-model="selected" :hide-actions="false" :indent-lines="true" :items="items" :separate-roots="true" density="compact" item-value="key"
+      :loading="pending"
+      open-on-click return-object open-all
     >
       <template #prepend="{ item, isOpen }">
         <v-icon :icon="getIcon(item, isOpen)" :color="isLocaleMissing(item) ? 'error' : undefined" />
@@ -56,8 +57,9 @@ function isLocaleMissing(item: TreeViewEntry) {
         </template>
       </template>
     </v-treeview>
-    <v-navigation-drawer :model-value="!!selected?.[0]" location="end" width="400">
+    <v-navigation-drawer :model-value="!!selected?.[0]" location="end" width="400" permanent>
       <div v-if="!!selected?.[0]" class="pa-3">
+        <v-btn icon="mdi-close" variant="text" style="position: absolute; right: 8px" @click="selected = []" />
         <div class="text-center">
           <v-icon :icon="getIcon(selected[0], false)" size="80" />
         </div>
@@ -70,12 +72,12 @@ function isLocaleMissing(item: TreeViewEntry) {
         </div>
         <v-divider />
         <template v-for="locale of locales" :key="locale">
-          <div class="py-2 d-flex">
-            <v-chip density="compact" :color="selected[0].value[locale] ? 'default' : 'error'" class="mx-1">
+          <div class="py-2 text-center">
+            <v-chip density="compact" :color="selected[0].value[locale] ? 'default' : 'error'" class="mx-1 mb-1">
               {{ locale }}
             </v-chip>
             <div>
-              {{ selected[0].value[locale] }}
+              {{ selected[0].value[locale] ? selected[0].value[locale] : '-' }}
             </div>
           </div>
           <v-divider />
