@@ -13,6 +13,8 @@ export default defineEventHandler(async (event) => {
   }
   if (item.value) {
     Object.entries(item.value).forEach(([locale, value]) => {
+      if (entry.value && entry.value[locale] === value)
+        return // no change
       updateLocaleJson(locale, item.key, value)
     })
   }
