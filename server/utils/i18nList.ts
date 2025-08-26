@@ -1,24 +1,18 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import * as process from 'node:process'
+import { readLocaleJson } from './locales'
 
 export function getI18nListData() {
-  const dataFolder = path.join(process.cwd(), 'data')
   const locales = getLocalesFromDataFolder()
 
   let data: Array<I18nListEntry> = []
+  // Iterate over each locale, read its JSON data and parses the data to a flat array
   locales.forEach((locale) => {
-    const filePath = path.join(dataFolder, `${locale}.json`)
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf-8')
-      try {
-        const jsonData = JSON.parse(fileContent)
-        const treeviewData = parseI18nList(jsonData, locale)
-        data = mergeI18nListData(data, treeviewData)
-      }
-      catch (error) {
-        console.error(`Error parsing JSON from ${filePath}:`, error)
-      }
+    try {
+      const jsonData = readLocaleJson(locale)
+      const treeviewData = parseI18nList(jsonData, locale)
+      data = mergeI18nListData(data, treeviewData)
+    }
+    catch (error) {
+      console.error(`Error parsing JSON for locale: ${locale}:`, error)
     }
   })
 
@@ -43,13 +37,13 @@ function mergeI18nListData(data: Array<I18nListEntry>, newData: Array<I18nListEn
 
 /**
  * Recursively parses an i18n object into a tree structure.
- * @param i18nObject
+ * @param I18nJsonObject
  * @param localeKey
  * @param parentKey
  */
-export function parseI18nList(i18nObject: I18nObject, localeKey: string, parentKey?: string) {
+export function parseI18nList(I18nJsonObject: I18nJsonObject, localeKey: string, parentKey?: string) {
   const result: I18nListEntry[] = []
-  Object.entries(i18nObject).forEach(([key, value]) => {
+  Object.entries(I18nJsonObject).forEach(([key, value]) => {
     const i18nKey = parentKey ? `${parentKey}.${key}` : key
     const item: I18nListEntry = { title: key, key: i18nKey }
     if (typeof value === 'string') {
