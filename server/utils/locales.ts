@@ -65,3 +65,29 @@ export function readLocaleJson(locale: string): I18nJsonObject {
     })
   }
 }
+
+/**
+ * Updates a specific key in a locale JSON file.
+ * @param locale The locale identifier (filename without extension)
+ * @param i18nKey The key to update (dot-separated path)
+ * @param newValue The new value to set
+ */
+export function updateLocaleJson(locale: string, i18nKey: string, newValue: string) {
+  const keys = i18nKey.split('.')
+  const i18nObject = readLocaleJson(locale)
+
+  // find i18nObject and ensure the i18nObject has the necessary structure
+  let current = i18nObject
+  for (let i = 0; i < keys.length - 1; i++) {
+    const key = keys[i]
+    // create nested objects if they don't exist
+    if (!(key in current) || typeof current[key] !== 'object') {
+      current[key] = {}
+    }
+    current = current[key]
+  }
+  // set the new value
+  current[keys[keys.length - 1]] = newValue
+  // write the updated i18nObject back to the JSON file
+  fs.writeFileSync(geti18nFilePath(locale), JSON.stringify(i18nObject, null, 2))
+}
