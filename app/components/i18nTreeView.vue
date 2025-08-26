@@ -3,6 +3,7 @@ const props = defineProps<{
   items: TreeViewEntry[]
   locales: string[]
   loading?: boolean
+  search?: string
 }>()
 
 const selected = shallowRef()
@@ -30,8 +31,8 @@ function isLocaleMissing(item: TreeViewEntry) {
 
 <template>
   <v-treeview
-    v-model="selected" :hide-actions="false" :indent-lines="true" :items="items" :separate-roots="true" density="compact" item-value="key"
-    :loading="loading" open-on-click return-object open-all
+    v-model="selected" :hide-actions="false" :indent-lines="true" :items="items" :separate-roots="true" density="compact" item-value="key" item-title="key"
+    :loading="loading" open-on-click return-object open-all :search="search"
   >
     <template #prepend="{ item, isOpen }">
       <v-icon :icon="getIcon(item, isOpen)" :color="isLocaleMissing(item) ? 'error' : undefined" />
