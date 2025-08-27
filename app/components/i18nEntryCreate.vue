@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import I18nEntryBreadcrumb from './i18nEntryBreadcrumb.vue'
-
-const props = defineProps<{
-  entry: I18nListEntry
-  locales: string[]
-}>()
-
 const emits = defineEmits<{
   save: [I18nListEntry]
   cancel: []
 }>()
 
-const item = ref<I18nListEntry>(JSON.parse(JSON.stringify(props.entry)))
+const item = ref<I18nListEntry>({
+  key: '',
+  title: '',
+  value: {},
+})
 
 function saveEntry() {
   emits('save', item.value)
@@ -28,11 +25,12 @@ function cancelEdit() {
       <div class="text-center">
         <v-icon icon="mdi-earth" size="40" color="primary" />
         <div class="pb-1">
-          Edit Translation
+          Create Translation
         </div>
       </div>
-      <I18nEntryBreadcrumb :item="item" class="mb-4" />
-      <I18nEntryForm v-model="item" title-disabled />
+
+      <I18nEntryForm v-model="item" />
+      <div>{{ item }}</div>
     </v-card-text>
     <v-divider />
     <v-card-actions class="d-flex justify-end">
