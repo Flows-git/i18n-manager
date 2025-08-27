@@ -13,6 +13,17 @@ const searchValue = useState<string>('i18n-search-value')
   </v-container>
 </template> -->
 
+<script setup lang="ts">
+const { items, locales, loading, fetchI18nData } = useI18nAPI()
+fetchI18nData()
+</script>
+
 <template>
-  <I18nDataTable style="max-height: calc(100vh - var(--v-layout-top) - var(--v-layout-bottom));" />
+  <I18nDataTable :items="items" :locales="locales" :loading="loading" class="i18n-full-height" />
 </template>
+
+<style scoped>
+.i18n-full-height {
+  max-height: calc(100vh - var(--v-layout-top) - var(--v-layout-bottom));
+}
+</style>

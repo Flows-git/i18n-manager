@@ -9,6 +9,8 @@ const emits = defineEmits<{
   cancel: []
 }>()
 
+const { getLocaleTitleByKey } = useLocale()
+
 const item = ref<I18nListEntry>(JSON.parse(JSON.stringify(props.entry)))
 
 function saveEntry() {
@@ -32,7 +34,7 @@ const breadcrumbs = computed(() => {
       <div class="text-center">
         <v-icon icon="mdi-earth" size="40" color="primary" />
         <div class="pb-1">
-          Übersetzung bearbeiten
+          Edit Translation
         </div>
         <v-divider />
         <div class="d-flex justify-center text-body-2 bg-primary mx-n6">
@@ -47,20 +49,20 @@ const breadcrumbs = computed(() => {
       <template v-if="item.value">
         <v-divider />
         <div class="py-1 text-body-2 text-primary">
-          Übersetzungen
+          Translations
         </div>
         <template v-for="locale of locales" :key="locale">
-          <v-text-field v-model="item.value[locale]" :label="locale" color="primary" />
+          <v-text-field v-model="item.value[locale]" :label="getLocaleTitleByKey(locale)" color="primary" />
         </template>
       </template>
     </v-card-text>
     <v-divider />
     <v-card-actions class="d-flex justify-end">
       <v-btn @click="cancelEdit">
-        Abbrechen
+        Cancel
       </v-btn>
       <v-btn color="primary" @click="saveEntry">
-        Speichern
+        Save
       </v-btn>
     </v-card-actions>
   </v-card>

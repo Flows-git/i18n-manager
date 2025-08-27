@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import type { DataTableHeader } from 'vuetify'
+import { useI18nAPI } from '~/composables/useI18nAPI'
 
-const { data, pending, refresh } = useFetch<{ data: Array<I18nListEntry>, locales: string[] }>('/api/i18nList')
+const props = defineProps<{
+  items: I18nListEntry[]
+  locales: string[]
+  loading?: boolean
+}>()
 
-const locales = computed(() => data.value?.locales || [])
-const items = computed(() => data.value?.data || [])
-const searchValue = useState<string>('i18n-search-value')
+const searchValue = useSearchValue()
+
+const { updateI18nEntry } = useI18nAPI()
+const { getLocaleTitleByKey } = useLocale()
 
 async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
   try {
-    await $fetch('/api/i18n', {
-      method: 'POST',
-      body: entry,
-    })
-    await refresh()
+    await updateI18nEntry(entry)
     isActive.value = false
   }
   catch (error) {
@@ -23,27 +25,37 @@ async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
 
 const headers = computed<DataTableHeader[]>(() => {
   const i: DataTableHeader[] = [
-    { key: 'key', title: 'Key' },
+    { key: 'key', title: 'i18n key' },
     // { key: 'title', title: 'Title', maxWidth: 150 },
   ]
-  locales.value.forEach((locale) => {
-    i.push({ key: `value.${locale}`, title: locale.toUpperCase() })
+  props.locales.forEach((locale) => {
+    i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale) })
   })
-  i.push({ key: 'actions', title: '', minWidth: 116 })
+  i.push({ key: 'actions', title: '', minWidth: 116 - 40 })
   return i
 })
 
 function isLocaleMissing(item: I18nListEntry) {
   const values = item.value
   if (values) {
-    return locales.value.some(locale => !values[locale])
+    return props.locales.some(locale => !values[locale])
   }
   return false
 }
 </script>
 
 <template>
-  <v-data-table :items="items" :headers="headers" :loading="pending" fixed-header :items-per-page="-1" hide-default-footer color="primary" :search="searchValue">
+  <v-data-table
+    :items="items"
+    :headers="headers"
+    :loading="loading"
+    fixed-header
+    :items-per-page="-1"
+    hide-default-footer
+    color="primary"
+    :search="searchValue"
+    height="calc(100vh - var(--v-layout-top) - var(--v-layout-bottom))"
+  >
     <template #[`item.key`]="{ item }">
       <div class="d-flex align-center">
         <v-icon v-if="isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
@@ -51,7 +63,7 @@ function isLocaleMissing(item: I18nListEntry) {
         <div>
           {{ item.key }}
         </div>
-        <v-btn v-if="!item.isFolder" icon="mdi-content-copy" size="small" @click.stop="copyTextToClipboard(item.key)" />
+        <v-btn v-if="!item.isFolder" icon="mdi-content-copy" size="small" variant="text" @click.stop="copyTextToClipboard(item.key)" />
       </div>
     </template>
 
@@ -59,14 +71,14 @@ function isLocaleMissing(item: I18nListEntry) {
       <div>
         <v-dialog width="400" persistent>
           <template #activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-pencil-outline" size="small" class="pr-1" @click.stop />
+            <v-btn v-bind="props" icon="mdi-pencil-outline" size="small" variant="text" color="primary" class="pr-1" @click.stop />
           </template>
 
           <template #default="{ isActive }">
             <i18nEntryEdit :entry="item" :locales="locales" @cancel="isActive.value = false" @save="(e) => updateEntry(e, isActive)" />
           </template>
         </v-dialog>
-        <v-btn icon="mdi-trash-can-outline" size="small" class="pl-1" @click.stop />
+        <!-- <v-btn icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop /> -->
       </div>
     </template>
   </v-data-table>
