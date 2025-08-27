@@ -52,8 +52,8 @@ export function parseI18nList(I18nJsonObject: I18nJsonObject, localeKey: string,
     }
     else if (isObject(value)) {
       // TODO: add hide/show folder option
-      // item.isFolder = true
-      // result.push(item)
+      item.isFolder = true
+      result.push(item)
 
       result.push(...parseI18nList(value, localeKey, i18nKey))
     }

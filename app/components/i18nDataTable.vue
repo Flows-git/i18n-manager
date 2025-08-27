@@ -29,7 +29,7 @@ const headers = computed<DataTableHeader[]>(() => {
     // { key: 'title', title: 'Title', maxWidth: 150 },
   ]
   props.locales.forEach((locale) => {
-    i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale) })
+    i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180 })
   })
   i.push({ key: 'actions', title: '', minWidth: 116 - 40 })
   return i
@@ -52,14 +52,13 @@ function isLocaleMissing(item: I18nListEntry) {
     fixed-header
     :items-per-page="-1"
     hide-default-footer
-    color="primary"
     :search="searchValue"
     height="calc(100vh - var(--v-layout-top) - var(--v-layout-bottom))"
   >
     <template #[`item.key`]="{ item }">
       <div class="d-flex align-center">
-        <v-icon v-if="isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
-        <v-icon v-if="!isLocaleMissing(item)" :icon="item.isFolder ? 'mdi-folder' : 'mdi-earth'" color="primary" class="mr-1" />
+        <v-icon v-if="!item.isFolder && isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
+        <v-icon v-else :icon="item.isFolder ? 'mdi-folder' : 'mdi-earth'" color="primary" class="mr-1" />
         <div>
           {{ item.key }}
         </div>
@@ -69,7 +68,7 @@ function isLocaleMissing(item: I18nListEntry) {
 
     <template #[`item.actions`]="{ item }">
       <div>
-        <v-dialog width="400" persistent>
+        <v-dialog v-if="!item.isFolder" width="400" persistent>
           <template #activator="{ props }">
             <v-btn v-bind="props" icon="mdi-pencil-outline" size="small" variant="text" color="primary" class="pr-1" @click.stop />
           </template>

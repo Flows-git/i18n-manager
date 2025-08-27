@@ -1,5 +1,5 @@
 export function useI18nAPI() {
-  const items = useState<I18nListEntry[]>('i18n-items', () => [])
+  const allItems = useState<I18nListEntry[]>('i18n-items', () => [])
   const locales = useState<string[]>('i18n-locales', () => [])
   const loading = useState<boolean>('i18n-loading', () => false)
 
@@ -7,7 +7,7 @@ export function useI18nAPI() {
     loading.value = true
     try {
       const result = await $fetch('/api/i18nList')
-      items.value = result.data
+      allItems.value = result.data
       locales.value = result.locales
     }
     catch (error) {
@@ -24,7 +24,8 @@ export function useI18nAPI() {
     await fetchI18nData()
   }
   return {
-    items,
+    items: computed(() => allItems.value.filter(i => !i.isFolder)),
+    folders: computed(() => allItems.value.filter(i => i.isFolder)),
     locales,
     loading,
     fetchI18nData,
