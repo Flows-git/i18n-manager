@@ -14,8 +14,7 @@ const searchValue = useState<string>('i18n-search-value')
 </template> -->
 
 <script setup lang="ts">
-const { items, locales, loading, fetchI18nData } = useI18nAPI()
-fetchI18nData()
+const { items, locales, loading } = useI18nAPI()
 </script>
 
 <template>
