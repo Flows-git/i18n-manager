@@ -16,10 +16,10 @@ function geti18nFolderPath() {
  * @returns The absolute path to the locale JSON file.
  * @throws Will throw an error if the file does not exist.
  */
-function geti18nFilePath(locale: string) {
+function geti18nFilePath(locale: string, mustExist = true) {
   const filePath = path.join(geti18nFolderPath(), `${locale}.json`)
   // check if file exists
-  if (!fs.existsSync(filePath)) {
+  if (mustExist && !fs.existsSync(filePath)) {
     throw createError({
       statusCode: 400,
       statusMessage: `JSON file ${filePath} not found`,
@@ -71,6 +71,7 @@ export function readLocaleJson(locale: string): I18nJsonObject {
  * @param locale The locale identifier (filename without extension)
  * @param i18nKey The key to update (dot-separated path)
  * @param newValue The new value to set
+ * @throws Will throw an error if the file does not exist or if parsing fails.
  */
 export function updateLocaleJson(locale: string, i18nKey: string, newValue: string) {
   const keys = i18nKey.split('.')
@@ -90,4 +91,20 @@ export function updateLocaleJson(locale: string, i18nKey: string, newValue: stri
   current[keys[keys.length - 1]] = newValue
   // write the updated i18nObject back to the JSON file
   fs.writeFileSync(geti18nFilePath(locale), JSON.stringify(i18nObject, null, 2))
+}
+
+/**
+ * Creates a new locale JSON file.
+ * @param locale The locale identifier (filename without extension)
+ * @throws Will throw an error if the file already exists.
+ */
+export function createNewLocale(locale: string) {
+  const filePath = geti18nFilePath(locale, false)
+  if (fs.existsSync(filePath)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `Locale ${locale} already exists`,
+    })
+  }
+  fs.writeFileSync(filePath, JSON.stringify({}, null, 2))
 }

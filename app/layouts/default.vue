@@ -12,6 +12,23 @@ const searchValue = useSearchValue()
       </div>
       <v-app-bar-title>i18n Manager</v-app-bar-title>
       <v-spacer />
+      <v-menu min-width="80">
+        <template #activator="{ props }">
+          <v-btn icon="mdi-plus" v-bind="props" />
+        </template>
+        <v-list>
+          <v-dialog width="400" persistent>
+            <template #activator="{ props }">
+              <v-list-item v-bind="props">
+                add Locale
+              </v-list-item>
+            </template>
+            <template #default="{ isActive }">
+              <LocaleCreate @cancel="isActive.value = false" @created="isActive.value = false" />
+            </template>
+          </v-dialog>
+        </v-list>
+      </v-menu>
       <div class="px-3">
         <v-text-field v-model="searchValue" label="Search Translation" hide-details density="compact" width="300px" append-inner-icon="mdi-magnify" />
       </div>
