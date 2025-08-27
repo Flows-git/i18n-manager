@@ -55,7 +55,7 @@ WORKDIR /app
 COPY --from=build /app/.output /app
 
 # Expose the default Nuxt port
-EXPOSE 3000/tcp
+EXPOSE 4000/tcp
 
 # Start the Nuxt server
 ENTRYPOINT [ "bun", "--bun", "run", "/app/server/index.mjs" ]
