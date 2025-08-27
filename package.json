@@ -1,7 +1,14 @@
 {
-  "name": "nuxt-app",
+  "name": "i18n-manager",
   "type": "module",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Translation manager UI for json based translations",
+  "author": {
+    "name": "Florian Wagner",
+    "email": "f.wagner92@gmail.com",
+    "url": "https://flowa.me"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

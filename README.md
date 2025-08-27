@@ -8,7 +8,7 @@
 [![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-A user-friendly web application for easy management of i18n JSON files for developers. With an intuitive user interface, you can manage translation keys, add languages, and efficiently organize your internationalization.
+A user-friendly web application for easy management of i18n JSON files for developers. With an intuitive user interface, you can manage translation keys, add languages, and efficiently organize your internationalization **directly in your application**.
 
 ## ✨ Features
 
@@ -90,7 +90,6 @@ bun dev
 
 ## 🚀 Deployment
 
-### Production Deployment
 Build the application for production
 ```bash
 bun run build
