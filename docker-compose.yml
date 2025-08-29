@@ -1,11 +1,11 @@
-name: i18n-ui
+name: i18n-manager
 
 services:
-  i18n-ui:
-    build: .
+  app:
+    image: docker.io/flowame/i18n-manager:latest
     ports:
-      - "3000:3000"
+      - "4000:3000"
     # environment:
     #   - HOST=
     volumes:
-      - ./test-data:/app/data
+      - ./data:/app/data

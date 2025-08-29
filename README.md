@@ -10,7 +10,7 @@
 
 > A user-friendly web application for easy management of i18n JSON files for developers. With an intuitive user interface, you can manage translation keys, add languages, and efficiently organize your internationalization **directly in your application**.
 
-#### 🚧 **This Project is under active development and currently not deployed to docker registry**
+#### 🚧 **This Project is under active development and not feature complete yet**
 
 ---
 
@@ -38,19 +38,19 @@
   ```
 
 ## 🚀 Quick Start
-### 📦 With Docker Compose (recommended)
+### 📦 With Docker Compose
 Create a `docker-compose.yml` file in your project root:
 ```yaml
 name: i18n-manager
 
 services:
   i18n-manager:
-    build: flowa.me/i18n-manager
+    build: docker.io/flowame/i18n-manager:latest
     ports:
-      - '4000:4000'
+      - '4000:3000'
     # mount i18n folder to the service
     volumes:
-      - ./path/to/i18nFolder:/data
+      - ./path/to/i18nFolder:/app/data
 ```
 Start the service:
 ```bash
@@ -62,7 +62,7 @@ Open your browser and navigate to: http://localhost:4000
 ### 🐳 With Docker
 Run Docker Container with mounted i18n folder
 ```bash
-docker run -p 4000:4000 -v /your/i18n/folder:/data i18n-manager
+docker run -p 4000:3000 -v ./your/i18n/folder:/app/data docker.io/flowame/i18n-manager:latest
 ```
 
 Open your browser and navigate to: http://localhost:4000
@@ -71,7 +71,7 @@ Open your browser and navigate to: http://localhost:4000
 
 Clone the repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/Flows-git/i18n-manager.git
 cd i18n-manager
 ```
 
@@ -94,16 +94,14 @@ bun dev
 
 ## 🚀 Deployment
 
-Build the application for production
-```bash
-bun run build
-```
+Build and push the application to dockerhub
 
 ```bash
 # Build production image
-docker build -t i18n-manager:latest .
+docker build -t flowame/i18n-manager:latest .
 
-... TODO
+# push to dockerhub
+docker push flowame/i18n-manager:latest
 ```
 
 ## 🤝 Contributing
