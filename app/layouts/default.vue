@@ -20,6 +20,17 @@ const searchValue = useSearchValue()
           <v-dialog width="400" persistent>
             <template #activator="{ props }">
               <v-list-item v-bind="props">
+                add Translation Key
+              </v-list-item>
+            </template>
+            <template #default="{ isActive }">
+              <I18nEntryCreate @cancel="isActive.value = false" @created="isActive.value = false" />
+            </template>
+          </v-dialog>
+
+          <v-dialog width="400" persistent>
+            <template #activator="{ props }">
+              <v-list-item v-bind="props">
                 add Locale
               </v-list-item>
             </template>

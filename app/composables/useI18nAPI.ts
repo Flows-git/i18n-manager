@@ -23,6 +23,15 @@ export function useI18nAPI() {
     })
     await fetchI18nData()
   }
+
+  async function createI18nEntry(entry: I18nListEntry) {
+    await $fetch('/api/i18n', {
+      method: 'POST',
+      body: entry,
+    })
+    await fetchI18nData()
+  }
+
   return {
     items: computed(() => allItems.value.filter(i => !i.isFolder)),
     folders: computed(() => allItems.value.filter(i => i.isFolder)),
@@ -30,5 +39,6 @@ export function useI18nAPI() {
     loading,
     fetchI18nData,
     updateI18nEntry,
+    createI18nEntry,
   }
 }

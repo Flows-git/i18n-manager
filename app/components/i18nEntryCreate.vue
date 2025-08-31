@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const emits = defineEmits<{
-  save: [I18nListEntry]
+  created: [I18nListEntry]
   cancel: []
 }>()
 
@@ -10,8 +10,16 @@ const item = ref<I18nListEntry>({
   value: {},
 })
 
-function saveEntry() {
-  emits('save', item.value)
+const { createI18nEntry } = useI18nAPI()
+
+async function saveEntry() {
+  try {
+    await createI18nEntry(item.value)
+    emits('created', item.value)
+  }
+  catch (error) {
+    console.error('error creating entry:', error)
+  }
 }
 
 function cancelEdit() {
@@ -30,7 +38,6 @@ function cancelEdit() {
       </div>
 
       <I18nEntryForm v-model="item" />
-      <div>{{ item }}</div>
     </v-card-text>
     <v-divider />
     <v-card-actions class="d-flex justify-end">
