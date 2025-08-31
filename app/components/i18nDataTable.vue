@@ -26,13 +26,13 @@ async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
 
 const headers = computed<DataTableHeader[]>(() => {
   const i: DataTableHeader[] = [
-    { key: 'key', title: 'i18n key', maxWidth: 200 },
+    { key: 'key', title: 'i18n key', minWidth: 300, width: 450 },
     // { key: 'title', title: 'Title', maxWidth: 150 },
   ]
   props.locales.forEach((locale) => {
     i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180 })
   })
-  i.push({ key: 'actions', title: '', minWidth: 116 })
+  i.push({ key: 'actions', title: '', width: 116, minWidth: 116 })
   return i
 })
 
@@ -52,7 +52,7 @@ async function deleteEntry(item: I18nListEntry) {
 </script>
 
 <template>
-  <v-data-table
+  <v-data-table-virtual
     :items="items" :headers="headers" :loading="loading" fixed-header :items-per-page="-1" hide-default-footer :search="searchValue"
     height="calc(100vh - var(--v-layout-top) - var(--v-layout-bottom))"
   >
@@ -60,13 +60,13 @@ async function deleteEntry(item: I18nListEntry) {
       <div class="d-flex align-center">
         <v-icon v-if="!item.isFolder && isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
         <v-icon v-else :icon="item.isFolder ? 'mdi-folder' : 'mdi-earth'" color="primary" class="mr-1" />
-        <div>
-          {{ item.key }}
+        <div class="i18n-key">
+          {{ item.key.replace(/\./g, ".\u200B") }}
+          <v-btn
+            v-if="!item.isFolder" v-tooltip:end="{ text: 'copy key', contentClass: 'tooltip-success' }" icon="mdi-content-copy" size="small" variant="text"
+            @click.stop="copyTextToClipboard(item.key)"
+          />
         </div>
-        <v-btn
-          v-if="!item.isFolder" v-tooltip:end="{ text: 'copy key', contentClass: 'tooltip-success' }" icon="mdi-content-copy" size="small" variant="text"
-          @click.stop="copyTextToClipboard(item.key)"
-        />
       </div>
     </template>
 
@@ -84,11 +84,17 @@ async function deleteEntry(item: I18nListEntry) {
         <v-btn icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop="deleteEntry(item)" />
       </div>
     </template>
-  </v-data-table>
+  </v-data-table-virtual>
 </template>
 
 <style lang="scss">
 .tooltip-success {
   background: rgb(var(--v-theme-primary)) !important
+}
+
+.i18n-key {
+  &::after {
+    content: "\200B";
+  }
 }
 </style>
