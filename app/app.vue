@@ -8,5 +8,7 @@ await fetchI18nData()
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
+    <NuxtVuetifyConfirmDialog />
   </v-app>
 </template>

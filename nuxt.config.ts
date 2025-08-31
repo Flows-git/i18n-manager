@@ -4,7 +4,12 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/test-utils'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/icon',
+    '@nuxt/test-utils',
+    './modules/confirmDialog',
+  ],
 
   eslint: {
     config: {
