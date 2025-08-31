@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
 
-const { global } = useTheme()
+const { global, change } = useTheme()
 const currentTheme = computed({
   get: () => global.name.value,
   set: (val) => {
     if (val !== global.name.value) {
-      global.name.value = val
+      change(val)
     }
   },
 })

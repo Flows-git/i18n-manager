@@ -6,7 +6,7 @@ export function useI18nAPI() {
   async function fetchI18nData() {
     loading.value = true
     try {
-      const result = await $fetch('/api/i18nList')
+      const result = await $fetch('/api/i18n')
       allItems.value = result.data
       locales.value = result.locales
     }
@@ -18,7 +18,7 @@ export function useI18nAPI() {
 
   async function updateI18nEntry(entry: I18nListEntry) {
     await $fetch('/api/i18n', {
-      method: 'POST',
+      method: 'PUT',
       body: entry,
     })
     await fetchI18nData()
