@@ -94,6 +94,45 @@ export function updateLocaleJson(locale: string, i18nKey: string, newValue: stri
 }
 
 /**
+ * Deletes a specific key in a locale JSON file.
+ * @param locale The locale identifier (filename without extension)
+ * @param i18nKey The key to delete (dot-separated path)
+ */
+export function deleteLocaleJson(locale: string, i18nKey: string) {
+  const i18nObject = readLocaleJson(locale)
+  const keys = i18nKey.split('.')
+
+  function recursiveDelete(obj: I18nJsonObject, keys: string[], index = 0) {
+    const key = keys[index]
+
+    if (!(key in obj)) {
+      throw new Error(`Translation key "${i18nKey})" not found (eror at: ${keys.slice(0, index + 1).join('.')})`)
+    }
+
+    if (index === keys.length - 1) {
+      // delete last key
+      delete obj[key]
+    }
+    else {
+      // go to next level
+      const shouldDelete = recursiveDelete(obj[key] as I18nJsonObject, keys, index + 1)
+
+      if (shouldDelete) {
+        delete obj[key]
+      }
+    }
+
+    // true zurückgeben, wenn aktuelles Objekt nach dem Löschen leer ist
+    return Object.keys(obj).length === 0
+  }
+
+  recursiveDelete(i18nObject, keys)
+
+  // write the updated i18nObject back to the JSON file
+  fs.writeFileSync(geti18nFilePath(locale), JSON.stringify(i18nObject, null, 2))
+}
+
+/**
  * Creates a new locale JSON file.
  * @param locale The locale identifier (filename without extension)
  * @throws Will throw an error if the file already exists.

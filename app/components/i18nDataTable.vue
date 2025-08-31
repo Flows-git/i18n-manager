@@ -8,10 +8,11 @@ const props = defineProps<{
   loading?: boolean
 }>()
 
-const searchValue = useSearchValue()
-
-const { updateI18nEntry } = useI18nAPI()
+const { showWarningDialog } = useConfirmDialog()
+const { updateI18nEntry, deleteI18nEntry } = useI18nAPI()
 const { getLocaleTitleByKey } = useLocale()
+
+const searchValue = useSearchValue()
 
 async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
   try {
@@ -25,13 +26,13 @@ async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
 
 const headers = computed<DataTableHeader[]>(() => {
   const i: DataTableHeader[] = [
-    { key: 'key', title: 'i18n key' },
+    { key: 'key', title: 'i18n key', maxWidth: 200 },
     // { key: 'title', title: 'Title', maxWidth: 150 },
   ]
   props.locales.forEach((locale) => {
     i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180 })
   })
-  i.push({ key: 'actions', title: '', minWidth: 116 - 40 })
+  i.push({ key: 'actions', title: '', minWidth: 116 })
   return i
 })
 
@@ -42,17 +43,17 @@ function isLocaleMissing(item: I18nListEntry) {
   }
   return false
 }
+
+async function deleteEntry(item: I18nListEntry) {
+  if (await showWarningDialog(`Do you really want to delete the translation key "${item.key}"`)) {
+    deleteI18nEntry(item)
+  }
+}
 </script>
 
 <template>
   <v-data-table
-    :items="items"
-    :headers="headers"
-    :loading="loading"
-    fixed-header
-    :items-per-page="-1"
-    hide-default-footer
-    :search="searchValue"
+    :items="items" :headers="headers" :loading="loading" fixed-header :items-per-page="-1" hide-default-footer :search="searchValue"
     height="calc(100vh - var(--v-layout-top) - var(--v-layout-bottom))"
   >
     <template #[`item.key`]="{ item }">
@@ -62,7 +63,10 @@ function isLocaleMissing(item: I18nListEntry) {
         <div>
           {{ item.key }}
         </div>
-        <v-btn v-if="!item.isFolder" icon="mdi-content-copy" size="small" variant="text" @click.stop="copyTextToClipboard(item.key)" />
+        <v-btn
+          v-if="!item.isFolder" v-tooltip:end="{ text: 'copy key', contentClass: 'tooltip-success' }" icon="mdi-content-copy" size="small" variant="text"
+          @click.stop="copyTextToClipboard(item.key)"
+        />
       </div>
     </template>
 
@@ -77,8 +81,14 @@ function isLocaleMissing(item: I18nListEntry) {
             <i18nEntryEdit :entry="item" :locales="locales" @cancel="isActive.value = false" @save="(e) => updateEntry(e, isActive)" />
           </template>
         </v-dialog>
-        <!-- <v-btn icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop /> -->
+        <v-btn icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop="deleteEntry(item)" />
       </div>
     </template>
   </v-data-table>
 </template>
+
+<style lang="scss">
+.tooltip-success {
+  background: rgb(var(--v-theme-primary)) !important
+}
+</style>
