@@ -1,6 +1,6 @@
 import { createVuetify } from 'vuetify'
 import { aliases } from 'vuetify/iconsets/mdi-svg'
-import { de } from 'vuetify/locale'
+import { de, en } from 'vuetify/locale'
 
 import { defaultProps } from './vuetify.defaults'
 import { dark, light } from './vuetify.themes'
@@ -11,8 +11,8 @@ export default defineNuxtPlugin((app) => {
   const vuetify = createVuetify({
     ssr: true,
     locale: {
-      locale: 'de',
-      messages: { de },
+      locale: 'en',
+      messages: { de, en },
     },
     theme: {
       defaultTheme: 'dark',

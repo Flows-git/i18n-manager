@@ -6,7 +6,7 @@ const emits = defineEmits<{
 
 const locale = ref<string>()
 
-const { allLocales, addNewLocale } = useLocale()
+const { addNewLocale } = useLocale()
 
 const error = ref()
 const loading = ref<boolean>(false)
@@ -30,7 +30,7 @@ async function createLocale() {
 <template>
   <v-card>
     <v-card-text>
-      <v-autocomplete v-model="locale" :items="allLocales" label="Select New Language" item-value="key" :disabled="loading" :error-messages="error?.message ? [error.message] : []" />
+      <LocaleInput v-model="locale" label="Select New Language" :loading="loading" :error-messages="error?.message ? [error.message] : []" />
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
       <v-btn @click="$emit('cancel')">

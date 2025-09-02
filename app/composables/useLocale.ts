@@ -5,7 +5,7 @@ export function useLocale() {
     return allLocales.value.find(locale => locale.key === key)?.title ?? key
   }
 
-  async function addNewLocale(locale: string) {
+  async function addNewLocale(locale: string | Array<string>) {
     await $fetch('/api/locales', {
       method: 'POST',
       body: {

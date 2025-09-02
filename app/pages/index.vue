@@ -15,10 +15,15 @@ const searchValue = useState<string>('i18n-search-value')
 
 <script setup lang="ts">
 const { items, locales, loading } = useI18nAPI()
+
+const hasLocales = computed(() => !loading.value && locales.value.length > 0)
 </script>
 
 <template>
-  <I18nDataTable :items="items" :locales="locales" :loading="loading" class="i18n-full-height" />
+  <div>
+    <LocaleCreateInitial v-if="!hasLocales" />
+    <I18nDataTable v-if="hasLocales" :items="items" :locales="locales" :loading="loading" class="i18n-full-height" />
+  </div>
 </template>
 
 <style scoped>
