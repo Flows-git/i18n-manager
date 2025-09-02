@@ -77,6 +77,35 @@ function createFile(locale: string) {
   fs.writeFileSync(filePath, JSON.stringify({}, null, 2))
 }
 
+function deleteFile(locale: string) {
+  const filePath = geti18nFilePath(locale, false)
+  if (!fs.existsSync(filePath)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `Locale ${locale} does not exist`,
+    })
+  }
+  fs.unlink(filePath, (err) => {
+    if (err)
+      throw err
+  })
+}
+
+function renameFile(oldName: string, newName: string) {
+  const filePath = geti18nFilePath(oldName, false)
+  const newFilePath = geti18nFilePath(newName, false)
+  if (!fs.existsSync(filePath)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `Locale ${oldName} does not exist`,
+    })
+  }
+  fs.rename(filePath, newFilePath, (err) => {
+    if (err)
+      throw err
+  })
+}
+
 // Helper
 
 /**
@@ -110,4 +139,6 @@ export default {
   readFile,
   updateFile,
   createFile,
+  deleteFile,
+  renameFile,
 }
