@@ -3,7 +3,7 @@ import type { DataTableHeader } from 'vuetify'
 import { useI18nAPI } from '~/composables/useI18nAPI'
 
 const props = defineProps<{
-  items: I18nListEntry[]
+  items: I18nItem[]
   locales: string[]
   loading?: boolean
 }>()
@@ -14,7 +14,7 @@ const { getLocaleTitleByKey } = useLocale()
 
 const searchValue = useSearchValue()
 
-async function updateEntry(entry: I18nListEntry, isActive: Ref<boolean>) {
+async function updateEntry(entry: I18nEntry, isActive: Ref<boolean>) {
   try {
     await updateI18nEntry(entry)
     isActive.value = false
@@ -36,7 +36,7 @@ const headers = computed<DataTableHeader[]>(() => {
   return i
 })
 
-function isLocaleMissing(item: I18nListEntry) {
+function isLocaleMissing(item: I18nEntry) {
   const values = item.value
   if (values) {
     return props.locales.some(locale => !values[locale])
@@ -44,10 +44,14 @@ function isLocaleMissing(item: I18nListEntry) {
   return false
 }
 
-async function deleteEntry(item: I18nListEntry) {
+async function deleteEntry(item: I18nEntry) {
   if (await showWarningDialog(`Do you really want to delete the translation key "${item.key}"`)) {
     deleteI18nEntry(item)
   }
+}
+
+function isFolder(item: I18nItem) {
+  return item.type === 'folder'
 }
 </script>
 
@@ -58,12 +62,12 @@ async function deleteEntry(item: I18nListEntry) {
   >
     <template #[`item.key`]="{ item }">
       <div class="d-flex align-center">
-        <v-icon v-if="!item.isFolder && isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
-        <v-icon v-else :icon="item.isFolder ? 'mdi-folder' : 'mdi-earth'" color="primary" class="mr-1" />
+        <v-icon v-if="!isFolder(item) && isLocaleMissing(item)" icon="mdi-alert" color="error" class="mr-1" />
+        <v-icon v-else :icon="isFolder(item) ? 'mdi-folder' : 'mdi-earth'" color="primary" class="mr-1" />
         <div class="i18n-key">
           {{ item.key.replace(/\./g, ".\u200B") }}
           <v-btn
-            v-if="!item.isFolder" v-tooltip:end="{ text: 'copy key', contentClass: 'tooltip-success' }" icon="mdi-content-copy" size="small" variant="text"
+            v-if="!isFolder(item)" v-tooltip:end="{ text: 'copy key', contentClass: 'tooltip-success' }" icon="mdi-content-copy" size="small" variant="text"
             @click.stop="copyTextToClipboard(item.key)"
           />
         </div>
@@ -72,16 +76,16 @@ async function deleteEntry(item: I18nListEntry) {
 
     <template #[`item.actions`]="{ item }">
       <div>
-        <v-dialog v-if="!item.isFolder" width="400" persistent>
-          <template #activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-pencil-outline" size="small" variant="text" color="primary" class="pr-1" @click.stop />
+        <v-dialog v-if="!isFolder(item)" width="400" persistent>
+          <template #activator="{ props: dialogProps }">
+            <v-btn v-bind="dialogProps" icon="mdi-pencil-outline" size="small" variant="text" color="primary" class="pr-1" @click.stop />
           </template>
 
           <template #default="{ isActive }">
             <i18nEntryEdit :entry="item" :locales="locales" @cancel="isActive.value = false" @save="(e) => updateEntry(e, isActive)" />
           </template>
         </v-dialog>
-        <v-btn icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop="deleteEntry(item)" />
+        <v-btn v-if="!isFolder(item)" icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop="deleteEntry(item)" />
       </div>
     </template>
   </v-data-table-virtual>

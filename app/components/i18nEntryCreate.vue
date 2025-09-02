@@ -1,10 +1,11 @@
 <script setup lang="ts">
 const emits = defineEmits<{
-  created: [I18nListEntry]
+  created: [I18nEntry]
   cancel: []
 }>()
 
-const item = ref<I18nListEntry>({
+const item = ref<I18nEntry>({
+  type: 'entry',
   key: '',
   title: '',
   value: {},

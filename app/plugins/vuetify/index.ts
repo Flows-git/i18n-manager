@@ -31,12 +31,12 @@ export default defineNuxtPlugin((app) => {
   // changes the theme to user prefered theme :)
   app.hooks.addHooks({ 'app:mounted': () => {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    vuetify.theme.global.name.value = prefersDark ? 'dark' : 'light'
+    vuetify.theme.change(prefersDark ? 'dark' : 'light')
   } })
 
   if (import.meta.client) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      vuetify.theme.global.name.value = e.matches ? 'dark' : 'light'
+      vuetify.theme.change(e.matches ? 'dark' : 'light')
     })
   }
 })

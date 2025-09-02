@@ -1,22 +1,7 @@
-import { updateLocaleJson } from '../utils/locales'
-
 /**
  * Creates a new translation entry
  */
 export default defineEventHandler(async (event) => {
-  const item = await readBody<I18nListEntry>(event)
-  const data = getI18nListData()
-
-  const entry = data.find(i => i.key === item.key)
-  if (entry) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'translation already exists',
-    })
-  }
-  if (item.value) {
-    Object.entries(item.value).forEach(([locale, value]) => {
-      updateLocaleJson(locale, item.key, value)
-    })
-  }
+  const item = await readBody<I18nEntry>(event)
+  i18nItems.create(item)
 })

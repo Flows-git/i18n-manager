@@ -2,16 +2,16 @@
 import I18nEntryBreadcrumb from './i18nEntryBreadcrumb.vue'
 
 const props = defineProps<{
-  entry: I18nListEntry
+  entry: I18nEntry
   locales: string[]
 }>()
 
 const emits = defineEmits<{
-  save: [I18nListEntry]
+  save: [I18nEntry]
   cancel: []
 }>()
 
-const item = ref<I18nListEntry>(JSON.parse(JSON.stringify(props.entry)))
+const item = ref<I18nEntry>(JSON.parse(JSON.stringify(props.entry)))
 
 function saveEntry() {
   emits('save', item.value)

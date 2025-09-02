@@ -1,13 +1,11 @@
 import merge from 'deepmerge'
-import { isObject } from './helper'
-import { getLocalesFromDataFolder, readLocaleJson } from './locales'
 
 export function getI18nTreeData() {
-  const locales = getLocalesFromDataFolder()
+  const _locales = locales.getAll()
   let data: Array<TreeViewEntry> = []
-  locales.forEach((locale) => {
+  _locales.forEach((locale) => {
     try {
-      const jsonData = readLocaleJson(locale)
+      const jsonData = fileManager.readFile(locale)
       const treeviewData = parseI18n(jsonData, locale)
       data = mergeI18nTree(data, treeviewData)
     }

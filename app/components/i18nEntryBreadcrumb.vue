@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  item: I18nListEntry
+  item: I18nItem
 }>()
 
 const breadcrumbs = computed(() => {

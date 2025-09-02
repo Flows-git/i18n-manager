@@ -1,5 +1,5 @@
 export function useI18nAPI() {
-  const allItems = useState<I18nListEntry[]>('i18n-items', () => [])
+  const allItems = useState<I18nItem[]>('i18n-items', () => [])
   const locales = useState<string[]>('i18n-locales', () => [])
   const loading = useState<boolean>('i18n-loading', () => false)
 
@@ -16,7 +16,7 @@ export function useI18nAPI() {
     loading.value = false
   }
 
-  async function updateI18nEntry(entry: I18nListEntry) {
+  async function updateI18nEntry(entry: I18nEntry) {
     await $fetch('/api/i18n', {
       method: 'PUT',
       body: entry,
@@ -24,7 +24,7 @@ export function useI18nAPI() {
     await fetchI18nData()
   }
 
-  async function createI18nEntry(entry: I18nListEntry) {
+  async function createI18nEntry(entry: I18nEntry) {
     await $fetch('/api/i18n', {
       method: 'POST',
       body: entry,
@@ -32,7 +32,7 @@ export function useI18nAPI() {
     await fetchI18nData()
   }
 
-  async function deleteI18nEntry(entry: I18nListEntry) {
+  async function deleteI18nEntry(entry: I18nEntry) {
     await $fetch('/api/i18n', {
       method: 'DELETE',
       body: entry,
@@ -41,8 +41,8 @@ export function useI18nAPI() {
   }
 
   return {
-    items: computed(() => allItems.value.filter(i => !i.isFolder)),
-    folders: computed(() => allItems.value.filter(i => i.isFolder)),
+    items: computed(() => allItems.value.filter(i => !(i.type === 'folder'))),
+    folders: computed(() => allItems.value.filter(i => i.type === 'folder')),
     locales,
     loading,
     fetchI18nData,

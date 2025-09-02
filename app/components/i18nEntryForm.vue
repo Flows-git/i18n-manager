@@ -3,7 +3,7 @@ defineProps<{
   titleDisabled?: boolean
 }>()
 
-const item = defineModel<I18nListEntry>({ required: true })
+const item = defineModel<I18nEntry>({ required: true })
 
 const { getLocaleTitleByKey } = useLocale()
 const { locales, folders } = useI18nAPI()
