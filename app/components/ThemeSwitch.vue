@@ -23,8 +23,15 @@ const currentTheme = computed({
   </v-switch>
 </template>
 
-<style>
-.theme-switch .v-switch__track{
+<style lang="scss" scoped>
+.theme-switch {
+
+  .v-switch__track{
   border: 1px solid !important
+}
+
+  :deep(.v-selection-control) {
+    justify-content: center !important;
+  }
 }
 </style>
