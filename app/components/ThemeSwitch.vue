@@ -10,16 +10,21 @@ const currentTheme = computed({
     }
   },
 })
-
-const icon = computed(() => currentTheme.value === 'light' ? 'ph:moon-stars-duotone' : 'ph:sun-duotone')
-
-function toggleTheme() {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light'
-}
 </script>
 
 <template>
-  <v-btn icon @click="toggleTheme">
-    <Icon :name="icon" size="20" />
-  </v-btn>
+  <v-switch v-model="currentTheme" class="theme-switch" false-value="light" true-value="dark" hide-details @click.stop>
+    <template #prepend>
+      <v-icon icon="mdi-weather-sunny" @click="currentTheme = 'light'" />
+    </template>
+    <template #append>
+      <v-icon icon="mdi-weather-night" @click="currentTheme = 'dark'" />
+    </template>
+  </v-switch>
 </template>
+
+<style>
+.theme-switch .v-switch__track{
+  border: 1px solid !important
+}
+</style>

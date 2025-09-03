@@ -37,7 +37,7 @@ function cancelEdit() {
           Create Translation
         </div>
       </div>
-
+      <I18nEntryBreadcrumb v-if="item.key" :item="item" class="mb-3" />
       <I18nEntryForm v-model="item" />
     </v-card-text>
     <v-divider />

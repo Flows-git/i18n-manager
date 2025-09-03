@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   titleDisabled?: boolean
+  keyReadonly?: boolean
 }>()
 
 const item = defineModel<I18nEntry>({ required: true })
@@ -28,6 +29,7 @@ function blurFolderInput() {
       item-value="key"
       color="primary"
       class="mb-4"
+      :disabled="keyReadonly"
       @blur="blurFolderInput"
     />
     <template v-if="item.value">

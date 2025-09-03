@@ -30,9 +30,9 @@ const headers = computed<DataTableHeader[]>(() => {
     // { key: 'title', title: 'Title', maxWidth: 150 },
   ]
   props.locales.forEach((locale) => {
-    i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180 })
+    i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180, sortable: false })
   })
-  i.push({ key: 'actions', title: '', width: 116, minWidth: 116 })
+  i.push({ key: 'actions', title: '', width: 116, minWidth: 116, sortable: false })
   return i
 })
 
