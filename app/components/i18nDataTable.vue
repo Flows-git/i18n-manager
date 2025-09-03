@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { DataTableHeader } from 'vuetify'
-import { useI18nAPI } from '~/composables/useI18nAPI'
 
 const props = defineProps<{
   items: I18nItem[]
@@ -8,11 +7,9 @@ const props = defineProps<{
   loading?: boolean
 }>()
 
-const { showWarningDialog } = useConfirmDialog()
 const { updateI18nEntry, deleteI18nEntry } = useI18nAPI()
+const { searchValue } = useI18nData()
 const { getLocaleTitleByKey } = useLocale()
-
-const searchValue = useSearchValue()
 
 async function updateEntry(entry: I18nEntry, isActive: Ref<boolean>) {
   try {
@@ -32,7 +29,7 @@ const headers = computed<DataTableHeader[]>(() => {
   props.locales.forEach((locale) => {
     i.push({ key: `value.${locale}`, title: getLocaleTitleByKey(locale), minWidth: 180, sortable: false })
   })
-  i.push({ key: 'actions', title: '', width: 116, minWidth: 116, sortable: false })
+  i.push({ key: 'actions', title: '', width: 116 - 40, minWidth: 116 - 40, sortable: false })
   return i
 })
 
@@ -44,10 +41,9 @@ function isLocaleMissing(item: I18nEntry) {
   return false
 }
 
-async function deleteEntry(item: I18nEntry) {
-  if (await showWarningDialog(`Do you really want to delete the translation key "${item.key}"`)) {
-    deleteI18nEntry(item)
-  }
+async function deleteEntry(item: I18nEntry, isActive: Ref<boolean>) {
+  await deleteI18nEntry(item)
+  isActive.value = false
 }
 
 function isFolder(item: I18nItem) {
@@ -82,10 +78,9 @@ function isFolder(item: I18nItem) {
           </template>
 
           <template #default="{ isActive }">
-            <i18nEntryEdit :entry="item" :locales="locales" @cancel="isActive.value = false" @save="(e) => updateEntry(e, isActive)" />
+            <i18nEntryEdit :entry="item" :locales="locales" @cancel="isActive.value = false" @save="(e) => updateEntry(e, isActive)" @delete="deleteEntry(item, isActive)" />
           </template>
         </v-dialog>
-        <v-btn v-if="!isFolder(item)" icon="mdi-trash-can-outline" size="small" variant="text" color="error" class="pl-1" @click.stop="deleteEntry(item)" />
       </div>
     </template>
   </v-data-table-virtual>

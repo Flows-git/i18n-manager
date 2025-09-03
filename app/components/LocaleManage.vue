@@ -4,7 +4,7 @@ const emits = defineEmits<{
   cancel: []
 }>()
 
-const { locales: _locales } = useI18nAPI()
+const { locales: _locales } = useI18nData()
 const { updateLocales } = useLocale()
 const locales = ref<Array<string | undefined>>([..._locales.value])
 

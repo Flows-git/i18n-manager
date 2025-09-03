@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import I18nEntryBreadcrumb from './i18nEntryBreadcrumb.vue'
-
 const props = defineProps<{
   entry: I18nEntry
   locales: string[]
@@ -9,7 +7,10 @@ const props = defineProps<{
 const emits = defineEmits<{
   save: [I18nEntry]
   cancel: []
+  delete: []
 }>()
+
+const { showWarningDialog } = useConfirmDialog()
 
 const item = ref<I18nEntry>(JSON.parse(JSON.stringify(props.entry)))
 
@@ -19,6 +20,12 @@ function saveEntry() {
 
 function cancelEdit() {
   emits('cancel')
+}
+
+async function deleteEntry() {
+  if (await showWarningDialog(`Do you really want to delete the translation key "${item.value.key}"`)) {
+    emits('delete')
+  }
 }
 </script>
 
@@ -35,7 +42,12 @@ function cancelEdit() {
       <I18nEntryForm v-model="item" key-readonly />
     </v-card-text>
     <v-divider />
-    <v-card-actions class="d-flex justify-end">
+    <v-card-actions>
+      <v-btn color="error" @click="deleteEntry">
+        <v-icon icon="mdi-trash-can-outline" />
+        Delete
+      </v-btn>
+      <v-spacer />
       <v-btn @click="cancelEdit">
         Cancel
       </v-btn>

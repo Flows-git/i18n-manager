@@ -7,7 +7,7 @@ defineProps<{
 const item = defineModel<I18nEntry>({ required: true })
 
 const { getLocaleTitleByKey } = useLocale()
-const { locales, folders } = useI18nAPI()
+const { locales, folders } = useI18nData()
 
 const folderSearchValue = ref()
 function blurFolderInput() {

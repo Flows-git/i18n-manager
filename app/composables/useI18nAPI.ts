@@ -1,6 +1,5 @@
 export function useI18nAPI() {
-  const allItems = useState<I18nItem[]>('i18n-items', () => [])
-  const locales = useState<string[]>('i18n-locales', () => [])
+  const { allItems, locales } = useI18nData()
   const loading = useState<boolean>('i18n-loading', () => false)
 
   async function fetchI18nData() {
@@ -41,9 +40,6 @@ export function useI18nAPI() {
   }
 
   return {
-    items: computed(() => allItems.value.filter(i => !(i.type === 'folder'))),
-    folders: computed(() => allItems.value.filter(i => i.type === 'folder')),
-    locales,
     loading,
     fetchI18nData,
     updateI18nEntry,
