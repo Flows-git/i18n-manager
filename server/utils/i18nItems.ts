@@ -94,9 +94,15 @@ function updatei18nItem(item: I18nEntry) {
   }
   if (item.type === 'entry') {
     Object.entries(item.value).forEach(([locale, value]) => {
-      if (entry.value && entry.value[locale] === value)
+      const newVal = value.trim()
+      if (entry.value && entry.value[locale]?.trim() === newVal)
         return // no change
-      localeFile.updateKey(locale, item.key, value)
+      if (newVal && newVal.length) {
+        localeFile.updateKey(locale, item.key, newVal)
+      }
+      else {
+        localeFile.deleteKey(locale, item.key)
+      }
     })
   }
 }
