@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import LocaleCreate from '~/components/LocaleCreate.vue'
-
 const searchValue = useSearchValue()
 </script>
 
@@ -12,38 +10,42 @@ const searchValue = useSearchValue()
       </div>
       <v-app-bar-title>i18n Manager</v-app-bar-title>
       <v-spacer />
-      <v-menu min-width="80">
+      <!-- create translation dialog -->
+      <v-dialog width="400" persistent>
         <template #activator="{ props }">
           <v-btn icon="mdi-plus" v-bind="props" />
         </template>
-        <v-list>
-          <v-dialog width="400" persistent>
-            <template #activator="{ props }">
-              <v-list-item v-bind="props">
-                add Translation Key
-              </v-list-item>
-            </template>
-            <template #default="{ isActive }">
-              <I18nEntryCreate @cancel="isActive.value = false" @created="isActive.value = false" />
-            </template>
-          </v-dialog>
+        <template #default="{ isActive }">
+          <I18nEntryCreate @cancel="isActive.value = false" @created="isActive.value = false" />
+        </template>
+      </v-dialog>
+      <!-- search input -->
+      <div class="px-3">
+        <v-text-field v-model="searchValue" label="Search Translation" color="primary" hide-details density="compact" width="300px" append-inner-icon="mdi-magnify" />
+      </div>
 
+      <!-- more menu -->
+      <v-menu min-width="80">
+        <template #activator="{ props }">
+          <v-btn icon="mdi-dots-vertical" v-bind="props" />
+        </template>
+        <v-list>
+          <v-list-item class="py-0">
+            <ThemeSwitch />
+          </v-list-item>
+          <v-divider />
           <v-dialog width="400" persistent>
             <template #activator="{ props }">
               <v-list-item v-bind="props">
-                add Locale
+                Manage Languages
               </v-list-item>
             </template>
             <template #default="{ isActive }">
-              <LocaleCreate @cancel="isActive.value = false" @created="isActive.value = false" />
+              <LocaleManage @cancel="isActive.value = false" @updated="isActive.value = false" />
             </template>
           </v-dialog>
         </v-list>
       </v-menu>
-      <div class="px-3">
-        <v-text-field v-model="searchValue" label="Search Translation" hide-details density="compact" width="300px" append-inner-icon="mdi-magnify" />
-      </div>
-      <theme-switch />
     </v-app-bar>
     <v-main>
       <slot />

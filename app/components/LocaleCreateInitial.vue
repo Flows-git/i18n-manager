@@ -1,15 +1,27 @@
 <script setup lang="ts">
 const { addNewLocale } = useLocale()
 
-const selectedLocales = ref<Array<string | undefined>>([undefined])
+const locales = ref<Array<string | undefined>>([undefined])
 
 async function createLocales() {
   try {
-    await addNewLocale(selectedLocales.value.filter(l => typeof l === 'string'))
+    await addNewLocale(locales.value.filter(l => typeof l === 'string'))
   }
   catch (error) {
     console.error(error)
   }
+}
+
+function updateLocale(index: number, newName: string) {
+  locales.value[index] = newName
+}
+
+function removeLocale(index: number) {
+  locales.value = locales.value.filter((_, i) => i !== index)
+}
+
+function addLocale() {
+  locales.value.push(undefined)
 }
 </script>
 
@@ -22,20 +34,10 @@ async function createLocales() {
         </v-alert>
       </v-card-text>
       <v-card-text>
-        <LocaleInput v-for="(locale, i) of selectedLocales" :key="i" :model-value="locale" label="Language" @update:model-value="selectedLocales[i] = $event">
-          <template #append>
-            <v-btn v-tooltip="`Remove Language`" icon="mdi-minus" color="primary" variant="text" :disabled="selectedLocales.length === 1" @click="selectedLocales = selectedLocales.filter((l, index) => index !== i)" />
-          </template>
-        </LocaleInput>
-        <div class="text-center">
-          <v-btn @click="selectedLocales.push(undefined)">
-            <v-icon icon="mdi-plus" />
-            Add Language
-          </v-btn>
-        </div>
+        <LocaleInputList :locales="locales" @add-locale="addLocale" @remove-locale="removeLocale" @update-locale="updateLocale" />
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn :disabled="!selectedLocales.find(l => typeof l === 'string')" @click="createLocales">
+        <v-btn :disabled="!locales.find(l => typeof l === 'string')" @click="createLocales">
           Create Languages
         </v-btn>
       </v-card-actions>
