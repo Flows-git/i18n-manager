@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const searchValue = useSearchValue()
-</script>
-
 <template>
   <div>
     <v-app-bar>
@@ -21,7 +17,7 @@ const searchValue = useSearchValue()
       </v-dialog>
       <!-- search input -->
       <div class="px-3">
-        <v-text-field v-model="searchValue" label="Search Translation" color="primary" hide-details density="compact" width="300px" append-inner-icon="mdi-magnify" />
+        <SearchInput />
       </div>
 
       <!-- more menu -->
@@ -44,6 +40,12 @@ const searchValue = useSearchValue()
               <LocaleManage @cancel="isActive.value = false" @updated="isActive.value = false" />
             </template>
           </v-dialog>
+          <v-divider />
+          <v-list-item class="pb-0 text-center opacity-50 text-caption">
+            Made with <v-icon icon="mdi-heart" color="error" /> by <br><NuxtLink class="pl-1" href="https://flowa.me" target="_blank">
+              Florian Wagner
+            </NuxtLink>
+          </v-list-item>
         </v-list>
       </v-menu>
     </v-app-bar>

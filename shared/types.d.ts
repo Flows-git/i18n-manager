@@ -19,6 +19,11 @@ interface I18nFolder extends I18nBaseItem {
 
 type I18nItem = I18nEntry | I18nFolder
 
+interface I18nSearchFilter {
+  missingOnly?: boolean | 'string'
+  showFolder?: boolean
+}
+
 /* deprecated */
 interface TreeViewEntry {
   title: string
