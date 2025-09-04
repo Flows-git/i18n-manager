@@ -10,8 +10,6 @@
 
 > A user-friendly web application for easy management of i18n JSON files for developers. With an intuitive user interface, you can manage translation keys, add languages, and efficiently organize your internationalization **directly in your application**.
 
-#### 🚧 **This Project is under active development and not feature complete yet**
-
 ---
 
 ## ✨ Features
@@ -22,7 +20,7 @@
 - ➕ **Dynamic Addition**: Create new translation keys and languages on-the-fly
 - 🗑️ **Delete Function**: Remove unnecessary keys and languages
 - 🔍 **Find Missing Translations**: Identify and manage missing translation keys easily
-- 🐳 **Docker Ready**: Easy deployment with Docker Compose
+- 🐳 **Docker Ready**: Easy usage with Docker Compose
 
 ## 📋 Prerequisites
 
@@ -91,6 +89,10 @@ bun dev
 |--------|----------|-------------|
 | `GET` | `/api/i18n` | Get all translations |
 | `POST` | `/api/i18n` | Create or update translation key |
+| `PUT` | `/api/i18n` | Update translation key |
+| `DELETE` | `/api/i18n` | Deletes a translation key from all locales |
+| `POST` | `/api/locales` | Create locale files |
+| `PUT` | `/api/locales` | Create and Remove locale files |
 
 ## 🚀 Deployment
 
